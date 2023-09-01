@@ -41,6 +41,7 @@ def echo(update, context):
         temperature=0.2,
         top_p=0.95,
     )[0]
+    
     if len(res) > 4096:
         for x in range(0, len(res), 4096):
             update.message.reply_text(res['generation']['content'][x:x+4096])
@@ -53,8 +54,8 @@ def echo(update, context):
 def clear_context(update, context):
     user_id = update.message.from_user.id
     if user_id in instructions:
-        instructions[user_id] = []
-        update.message.reply_text("Контекст оцищен.")
+        del instructions[user_id]
+        update.message.reply_text("Контекст очищен.")
     else:
         update.message.reply_text("У вас пока нет текущего контекста.")
 
