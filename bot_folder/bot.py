@@ -1,5 +1,9 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-TOKEN = "5966871066:AAGeosdS66f0PMWe5kBXGaPhcwOTE5RDN8k"
+import yaml
+
+with open('./config.yaml', 'r') as f:
+    cfg = yaml.safe_load(f)
+TOKEN = cfg["token"]
 
 # Словарь для хранения истории диалогов
 instructions = {}
