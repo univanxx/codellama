@@ -20,7 +20,7 @@ generator = Llama.build(
 print("Model built!")
 
 def start(update, context):
-    update.message.reply_text("Привет! Я чат-модель CodeLLama на 7 миллиардов параметров. Тебе помочь с кодом?")
+    update.message.reply_text("Hi! I am CodeLLama-Instruct model with 7 billion parameters. Can I help you with coding?")
 
 def echo(update, context):
     user_id = update.message.from_user.id
@@ -55,17 +55,17 @@ def clear_context(update, context):
     user_id = update.message.from_user.id
     if user_id in instructions:
         del instructions[user_id]
-        update.message.reply_text("Контекст очищен.")
+        update.message.reply_text("Previous context cleared.")
     else:
-        update.message.reply_text("У вас пока нет текущего контекста.")
+        update.message.reply_text("You don't have a current context yet.")
 
 def help_command(update, context):
     command_list = [
-        "/start - Начать диалог",
-        "/clear - Очистить историю диалога"
+        "/start - Start a dialogue",
+        "/clear - Clear previous context"
     ]
     help_text = "\n".join(command_list)
-    update.message.reply_text("Список доступных команд:\n" + help_text)
+    update.message.reply_text("Available commands:\n" + help_text)
 
 def main():
     updater = Updater(token=TOKEN, use_context=True)
