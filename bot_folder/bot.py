@@ -24,7 +24,8 @@ generator = Llama.build(
 print("Model built!")
 
 def start(update, context):
-    update.message.reply_text("Hi! I am CodeLLama-Instruct model with 7 billion parameters. Can I help you with coding?")
+    update.message.reply_text("Hi! I am CodeLLama-Instruct model with 7 billion parameters. Can I help you with coding?", 
+                              parse_mode="Markdown")
 
 def echo(update, context):
     user_id = update.message.from_user.id
@@ -48,20 +49,20 @@ def echo(update, context):
     
     if len(res) > 4096:
         for x in range(0, len(res), 4096):
-            update.message.reply_text(res['generation']['content'][x:x+4096])
+            update.message.reply_text(res['generation']['content'][x:x+4096], parse_mode="Markdown")
         else:
-            update.message.reply_text(res['generation']['content'])
+            update.message.reply_text(res['generation']['content'], parse_mode="Markdown")
     else:
-        update.message.reply_text(res['generation']['content'])
+        update.message.reply_text(res['generation']['content'], parse_mode="Markdown")
     instructions[user_id][0].append({"role": "assistant", "content": res['generation']['content']})
 
 def clear_context(update, context):
     user_id = update.message.from_user.id
     if user_id in instructions:
         del instructions[user_id]
-        update.message.reply_text("Previous context cleared.")
+        update.message.reply_text("Previous context cleared.", parse_mode="Markdown")
     else:
-        update.message.reply_text("You don't have a current context yet.")
+        update.message.reply_text("You don't have a current context yet.", parse_mode="Markdown")
 
 def help_command(update, context):
     command_list = [
@@ -69,7 +70,7 @@ def help_command(update, context):
         "/clear - Clear previous context"
     ]
     help_text = "\n".join(command_list)
-    update.message.reply_text("Available commands:\n" + help_text)
+    update.message.reply_text("Available commands:\n" + help_text, parse_mode="Markdown")
 
 def main():
     updater = Updater(token=TOKEN, use_context=True)
