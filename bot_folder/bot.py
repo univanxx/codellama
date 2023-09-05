@@ -18,7 +18,7 @@ tokenizer_path=main_dir+"/CodeLlama-7b-Instruct/tokenizer.model"
 generator = Llama.build(
     ckpt_dir=ckpt_dir,
     tokenizer_path=tokenizer_path,
-    max_seq_len=4096,
+    max_seq_len=4096*4,
     max_batch_size=1,
 )
 print("Model built!")
@@ -40,21 +40,25 @@ def echo(update, context):
     else:
         instructions[user_id][0].append({"role": "user", "content": text})
 
-    res = generator.chat_completion(
-        instructions[user_id],
-        max_gen_len=None,
-        temperature=0.2,
-        top_p=0.95,
-    )[0]
-    
-    if len(res) > 4096:
-        for x in range(0, len(res), 4096):
-            update.message.reply_text(res['generation']['content'][x:x+4096], parse_mode="Markdown")
+    try:
+        res = generator.chat_completion(
+            instructions[user_id],
+            max_gen_len=None,
+            temperature=0.2,
+            top_p=0.95,
+        )[0]
+    except AssertionError:
+        update.message.reply_text("Your context length is bigger than maximum of 16384.")
+        clear_context(update, context)
+    else:
+        if len(res) > 4096:
+            for x in range(0, len(res), 4096):
+                update.message.reply_text(res['generation']['content'][x:x+4096], parse_mode="Markdown")
+            else:
+                update.message.reply_text(res['generation']['content'], parse_mode="Markdown")
         else:
             update.message.reply_text(res['generation']['content'], parse_mode="Markdown")
-    else:
-        update.message.reply_text(res['generation']['content'], parse_mode="Markdown")
-    instructions[user_id][0].append({"role": "assistant", "content": res['generation']['content']})
+        instructions[user_id][0].append({"role": "assistant", "content": res['generation']['content']})
 
 def clear_context(update, context):
     user_id = update.message.from_user.id
