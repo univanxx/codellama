@@ -74,7 +74,7 @@ def help_command(update, context):
         "/clear - Clear previous context"
     ]
     help_text = "\n".join(command_list)
-    update.message.reply_text("Available commands:\n" + help_text, parse_mode="Markdown")
+    update.message.reply_text("Hi! I am CodeLLama-Instruct model with 7 billion parameters. I can help you with coding. Available commands:\n" + help_text, parse_mode="Markdown")
 
 def main():
     updater = Updater(token=TOKEN, use_context=True)
