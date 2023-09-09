@@ -162,3 +162,4 @@ cython_debug/
 
 # My stuff
 llama_venv/
+CodeLlama-*
