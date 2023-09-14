@@ -1,4 +1,5 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram import ChatAction
 import yaml
 
 with open('./config.yaml', 'r') as f:
@@ -41,6 +42,8 @@ def echo(update, context):
         instructions[user_id][0].append({"role": "user", "content": text})
 
     try:
+        context.bot.send_chat_action(chat_id=update.effective_chat.id,
+                                     action=ChatAction.TYPING)
         res = generator.chat_completion(
             instructions[user_id],
             max_gen_len=None,
